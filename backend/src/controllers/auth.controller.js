@@ -1,3 +1,4 @@
+import { upsertStreamUser } from "../lib/stream.js";
 import User from "../models/User.model.js";
 import jwt from 'jsonwebtoken'
 
@@ -21,7 +22,7 @@ export const signup = async (req,res) => {
         }
 
         const idx = Math.floor(Math.random() * 100) + 1;
-        const randomAvatar = `https://robohash.org/${idx}.png`
+        const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
 
         const newUser = await User.create(
             {
@@ -32,7 +33,18 @@ export const signup = async (req,res) => {
             }
         )
 
-        //creating user in stream
+        try {
+            await upsertStreamUser(
+                {
+                    id: newUser._id.toString(),
+                    name: newUser.fullName,
+                    image: newUser.profilePic || "",
+                }
+            );
+            console.log(`Successfully completed Stream User creation for ${newUser.fullName}`);
+        } catch (error) {
+            console.error("Error encountered in calling code during Stream User creation:", error); 
+        }
 
         const token = jwt.sign(
             {
@@ -118,4 +130,56 @@ export const login = async (req,res) => {
 export const logout = async (req,res) => {
     res.clearCookie("jwt");
     res.status(200).json({message : "Logged out successfully"})
+}
+
+export const onboard = async(req,res) => {
+    try {
+        const userId = req.user._id;
+
+        const {fullName, bio , location ,learningLanguage , nativeLanguage} = req.body;
+
+        if(!fullName || !bio || !location || !learningLanguage || !nativeLanguage){
+            return res.status(400).json(
+                {
+                    message : "All fields are required",
+                    missingFields : 
+                    [
+                        !fullName && "fullName",
+                        !bio && "bio",
+                        !location && "location",
+                        !learningLanguage && "learningLanguage",
+                        !nativeLanguage && "nativeLanguage"    
+                    ].filter(Boolean),
+                }
+            );
+        }
+
+        const updateUser = await User.findByIdAndUpdate(userId,{...req.body,isOnBoarded : true},{new : true});
+
+        if(!updateUser){
+            return res.status(404).json({message : "User not found"});
+        }
+        
+        try {
+            await upsertStreamUser({
+                id: updateUser._id.toString(),
+                name: updateUser.fullName,
+                image: updateUser.profilePic || "",
+            })
+            console.log(`Successfully completed Stream User update for ${updateUser.fullName}`);
+        } catch (error) {
+            console.error("Error encountered in calling code during Stream User update:", error);
+        }
+
+        res.status(200).json(
+            {
+                success : true,
+                message : "User onboarded successfully",
+                user : updateUser
+            }
+        );
+    } catch (error) {
+        console.error("Error in onboard controller:", error);
+        return res.status(500).json({message : "Internal Server Error", error : error.message});
+    }
 }

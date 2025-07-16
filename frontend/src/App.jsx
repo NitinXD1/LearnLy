@@ -1,4 +1,4 @@
-import { Route,Routes } from "react-router"
+import { Navigate, Route,Routes } from "react-router"
 import HomePage from './pages/HomePage.jsx'
 import SignUpPage from "./pages/SignUpPage.jsx"
 import LogInPage from "./pages/LogInPage.jsx"
@@ -13,27 +13,29 @@ import { axiosInstance } from "./lib/axios.js"
 
 function App() {
 
-  const {data} = useQuery({
-    queryKey: ["todos"],
+  const {data:authData , isLoading , error} = useQuery({
+    queryKey: ["authUser"],
     queryFn: async () => {
-      const response = await axiosInstance.get('/auth/user')
+      const response = await axiosInstance.get('/auth/me')
       return response.data
     }
+    ,
+    retry: false,
   })
 
-  console.log(data)
+  const authUser = authData?.user
 
   return (
     <>
       <div className="h-screen" data-theme="night">
         <Routes>
-          <Route path="/" element={<HomePage />}/>
-          <Route path="/signup" element={<SignUpPage />}/>
-          <Route path="/login" element={<LogInPage />}/>
-          <Route path="/chat" element={<ChatPage />}/>
-          <Route path="/call" element={<CallPage />}/>
-          <Route path="/onboard" element={<OnBoardingPage />}/>
-          <Route path="/notifications" element={<NotificationPage />}/>
+          <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />}/>
+          <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />}/>
+          <Route path="/login" element={!authUser ? <LogInPage /> : <Navigate to="/" />}/>
+          <Route path="/chat" element={authUser ? <ChatPage /> : <Navigate to="/" />}/>
+          <Route path="/call" element={authUser ? <CallPage /> : <Navigate to="/" />}/>
+          <Route path="/onboard" element={authUser ? <OnBoardingPage /> : <Navigate to="/" />}/>
+          <Route path="/notifications" element={authUser ? <NotificationPage /> : <Navigate to="/" />}/>
         </Routes>
       </div>
 

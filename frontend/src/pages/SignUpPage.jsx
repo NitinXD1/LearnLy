@@ -1,8 +1,10 @@
 import { use, useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
+import {axiosInstance} from "../lib/axios.js";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { signup } from "../lib/api.js";
 
-// import useSignUp from "../hooks/useSignUp";
 
 const SignUpPage = () => {
   const [signupData, setSignupData] = useState({
@@ -11,24 +13,19 @@ const SignUpPage = () => {
     password: "",
   });
 
-  // This is how we did it at first, without using our custom hook
-  // const queryClient = useQueryClient();
-  // const {
-  //   mutate: signupMutation,
-  //   isPending,
-  //   error,
-  // } = useMutation({
-  //   mutationFn: signup,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-  // });
+  const queryClient = useQueryClient();
 
-  // This is how we did it using our custom hook - optimized version
-  // const { isPending, error, signupMutation } = useSignUp();
+  const {mutate : singupMutation , isPending, error} = useMutation(
+    {
+      mutationFn : signup,
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["user"] }),
+    }
+  );
 
-  // const handleSignup = (e) => {
-  //   e.preventDefault();
-  //   signupMutation(signupData);
-  // };
+  const handleSignup = (e) => {
+    e.preventDefault();
+    singupMutation(signupData);
+  };
 
   return (
     <div
@@ -53,17 +50,19 @@ const SignUpPage = () => {
           )}
 
           <div className="w-full">
-            <form >
+            <form 
+              onSubmit={handleSignup}>
               <div className="space-y-4">
                 <div>
                   <h2 className="text-xl font-semibold">Create an Account</h2>
                   <p className="text-sm opacity-70">
-                    Join Streamify and start your language learning adventure!
+                    Join LearnLy and start your language learning adventure!
                   </p>
                 </div>
 
                 <div className="space-y-3">
                   {/* FULLNAME */}
+                  
                   <div className="form-control w-full">
                     <label className="label">
                       <span className="label-text">Full Name</span>
@@ -77,6 +76,7 @@ const SignUpPage = () => {
                       required
                     />
                   </div>
+
                   {/* EMAIL */}
                   <div className="form-control w-full">
                     <label className="label">
@@ -91,6 +91,7 @@ const SignUpPage = () => {
                       required
                     />
                   </div>
+
                   {/* PASSWORD */}
                   <div className="form-control w-full">
                     <label className="label">
@@ -122,14 +123,14 @@ const SignUpPage = () => {
                 </div>
 
                 <button className="btn btn-primary w-full" type="submit">
-                  {/* {isPending ? (
+                  {isPending ? (
                     <>
                       <span className="loading loading-spinner loading-xs"></span>
                       Loading...
                     </>
                   ) : (
                     "Create Account"
-                  )} */}
+                  )}
                 </button>
 
                 <div className="text-center mt-4">
@@ -150,7 +151,7 @@ const SignUpPage = () => {
           <div className="max-w-md p-8">
             {/* Illustration */}
             <div className="relative aspect-square max-w-sm mx-auto">
-              <img src="./" alt="Language connection illustration" className="w-full h-full" />
+              <img src="/i.png" alt="Language connection illustration" className="w-full h-full" />
             </div>
 
             <div className="text-center space-y-3 mt-6">

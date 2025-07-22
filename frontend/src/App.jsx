@@ -1,7 +1,7 @@
 import { Navigate, Route,Routes } from "react-router"
 import HomePage from './pages/HomePage.jsx'
 import SignUpPage from "./pages/SignUpPage.jsx"
-import LogInPage from "./pages/LogInPage.jsx"
+import LogInPage from "./pages/LoginPage.jsx"
 import ChatPage from "./pages/ChatPage.jsx"
 import NotificationPage from "./pages/NotificationsPage.jsx"
 import OnBoardingPage from "./pages/OnBoardingPage.jsx"
@@ -32,8 +32,20 @@ function App() {
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
           }/>
-          <Route path="/signup" element={!isAuthenticated ? <SignUpPage /> : <Navigate to="/" />}/>
-          <Route path="/login" element={!isAuthenticated ? <LogInPage /> : <Navigate to="/" />}/>
+          <Route 
+            path="/login"
+            element={
+              !isAuthenticated 
+              ? <LogInPage /> 
+              : <Navigate to={isOnboarded ? "/" : "/onboarding"} />}
+          />
+          <Route 
+            path="/signup" 
+            element={
+              !isAuthenticated ? 
+              <SignUpPage /> : <Navigate to={isOnboarded ? "/" : "/onboarding"} />
+            }
+          />
           <Route path="/chat" element={isAuthenticated ? <ChatPage /> : <Navigate to="/" />}/>
           <Route path="/notifications" element={isAuthenticated ? <NotificationPage /> : <Navigate to="/" />}/>
           <Route path="/call" element={isAuthenticated ? <CallPage /> : <Navigate to="/" />}/>

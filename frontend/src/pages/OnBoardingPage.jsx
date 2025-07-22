@@ -2,12 +2,12 @@ import { useState } from "react";
 import useAuthUser from "../hooks/useAuthUser";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-// import { completeOnboarding } from "../lib/api";
-import { LoaderIcon, MapPinIcon, ShipWheelIcon, ShuffleIcon } from "lucide-react";
-// import { LANGUAGES } from "../constants";
+import { completeOnboarding } from "../lib/api";
+import { LoaderIcon, MapPinIcon, ShipWheelIcon, ShuffleIcon , CameraIcon } from "lucide-react";
+import { LANGUAGES } from "../constants";
 
 const OnboardingPage = () => {
-  // const { authUser } = useAuthUser();
+  const { authUser } = useAuthUser();
   const queryClient = useQueryClient();
 
   const [formState, setFormState] = useState({
@@ -19,23 +19,23 @@ const OnboardingPage = () => {
     profilePic: authUser?.profilePic || "",
   });
 
-  // const { mutate: onboardingMutation, isPending } = useMutation({
-  //   mutationFn: completeOnboarding,
-  //   onSuccess: () => {
-  //     toast.success("Profile onboarded successfully");
-  //     queryClient.invalidateQueries({ queryKey: ["authUser"] });
-  //   },
+  const { mutate: onboardingMutation, isPending } = useMutation({
+    mutationFn: completeOnboarding,
+    onSuccess: () => {
+      toast.success("Profile onboarded successfully");
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    },
 
-  //   onError: (error) => {
-  //     toast.error(error.response.data.message);
-  //   },
-  // });
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  //   onboardingMutation(formState);
-  // };
+    onboardingMutation(formState);
+  };
 
   const handleRandomAvatar = () => {
     const idx = Math.floor(Math.random() * 100) + 1; // 1-100 included
@@ -90,6 +90,7 @@ const OnboardingPage = () => {
                 onChange={(e) => setFormState({ ...formState, fullName: e.target.value })}
                 className="input input-bordered w-full"
                 placeholder="Your full name"
+                required
               />
             </div>
 
@@ -104,6 +105,7 @@ const OnboardingPage = () => {
                 onChange={(e) => setFormState({ ...formState, bio: e.target.value })}
                 className="textarea textarea-bordered h-24"
                 placeholder="Tell others about yourself and your language learning goals"
+                required
               />
             </div>
 
@@ -119,6 +121,7 @@ const OnboardingPage = () => {
                   value={formState.nativeLanguage}
                   onChange={(e) => setFormState({ ...formState, nativeLanguage: e.target.value })}
                   className="select select-bordered w-full"
+                  required
                 >
                   <option value="">Select your native language</option>
                   {LANGUAGES.map((lang) => (
@@ -139,6 +142,7 @@ const OnboardingPage = () => {
                   value={formState.learningLanguage}
                   onChange={(e) => setFormState({ ...formState, learningLanguage: e.target.value })}
                   className="select select-bordered w-full"
+                  required
                 >
                   <option value="">Select language you're learning</option>
                   {LANGUAGES.map((lang) => (
@@ -164,6 +168,7 @@ const OnboardingPage = () => {
                   onChange={(e) => setFormState({ ...formState, location: e.target.value })}
                   className="input input-bordered w-full pl-10"
                   placeholder="City, Country"
+                  required
                 />
               </div>
             </div>

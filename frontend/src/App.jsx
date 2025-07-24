@@ -6,6 +6,7 @@ import ChatPage from "./pages/ChatPage.jsx"
 import NotificationPage from "./pages/NotificationsPage.jsx"
 import OnBoardingPage from "./pages/OnBoardingPage.jsx"
 import CallPage from "./pages/CallPage.jsx"
+import Layout from "./components/Layout.jsx"
 
 import {Toaster} from "react-hot-toast"
 import PageLoader from "./components/PageLoader.jsx"
@@ -22,11 +23,13 @@ function App() {
 
   return (
     <>
-      <div className="h-screen" data-theme="night">
+      <div className="h-screen" data-theme="forest">
         <Routes>
           <Route path="/" element={isAuthenticated && isOnboarded ?
             (
-              <HomePage />
+              <Layout showSidebar={true}>
+                <HomePage />
+              </Layout>
             ) : 
             (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />

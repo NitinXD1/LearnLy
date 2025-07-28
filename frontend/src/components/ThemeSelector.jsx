@@ -33,7 +33,6 @@ const ThemeSelector = () => {
             >
               <PaletteIcon className="size-4" />
               <span className="text-sm font-medium">{themeOption.label}</span>
-              {/* THEME PREVIEW COLORS */}
               <div className="ml-auto flex gap-1">
                 {themeOption.colors.map((color, i) => (
                   <span

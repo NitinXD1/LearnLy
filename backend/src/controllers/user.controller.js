@@ -10,8 +10,8 @@ export const getRecommendedUsers = async (req, res) => {
         const recommendedUsers = await User.find(
             {
                 $and: [
-                    { _id: { $ne: currentUserId } },
-                    { _id: { $nin: currentUser.friends } },
+                    { _id: { $ne: currentUserId } }, //exclude current user
+                    { _id: { $nin: currentUser.friends } }, //exclude its friends
                     {isOnBoarded : true}
                 ]
             }
@@ -41,7 +41,7 @@ export const getMyFriends = async (req, res) => {
 export const sendFriendRequest = async (req, res) => {
     try {
         const myId = req.user._id;
-        const {id:recipientId} = req.params.id;
+        const recipientId = req.params.id;
 
         if(myId === recipientId) {
             return res.status(400).json({message: "You cannot send a friend request to yourself"});

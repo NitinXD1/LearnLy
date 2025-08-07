@@ -41,7 +41,7 @@ export const getMyFriends = async (req, res) => {
 export const sendFriendRequest = async (req, res) => {
     try {
         const myId = req.user._id;
-        const recipientId = req.params.id;
+        const recipientId = req.params.id;  
 
         if(myId === recipientId) {
             return res.status(400).json({message: "You cannot send a friend request to yourself"});
@@ -117,11 +117,6 @@ export const acceptFriendRequest = async (req, res) => {
 
         return res.status(200).json({
             message: "Friend request accepted successfully",
-            friendRequest: {
-                sender: sender._id,
-                recipient: recipient._id,
-                status: friendRequest.status
-            }
         });
         
     } catch (error) {

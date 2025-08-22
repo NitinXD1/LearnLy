@@ -1,0 +1,21 @@
+{
+  "name": "learnly",
+  "version": "1.0.0",
+  "description": "An app to learn languages by chatting on messages and video calls to mentors specialized in those languages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NitinXD1/LearnLy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/NitinXD1/LearnLy/issues"
+  },
+  "homepage": "https://github.com/NitinXD1/LearnLy#readme"
+}

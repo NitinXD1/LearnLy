@@ -67,8 +67,6 @@ function App() {
             }
           />
 
-          <Route path="/chat" element={isAuthenticated ? <ChatPage /> : <Navigate to="/" />}/>
-          <Route path="/call" element={isAuthenticated ? <CallPage /> : <Navigate to="/" />}/>
           <Route path="/onboarding" element={
             isAuthenticated  ? (
               !isOnboarded ?( 
@@ -82,6 +80,31 @@ function App() {
                 <Navigate to="/login" />
             )
           }/>
+
+          <Route
+            path="/chat/:id"
+            element={
+              isAuthenticated && isOnboarded 
+              ? (
+                <Layout showSidebar={false}>
+                  <ChatPage />
+                </Layout>
+              ) :
+              (
+                <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+              ) 
+              }/>
+          <Route
+            path="/call/:id"
+            element={
+              isAuthenticated && isOnboarded ? 
+              <CallPage /> :
+              (
+                <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+              )
+            }
+          />
+          
         </Routes>
       </div>
 

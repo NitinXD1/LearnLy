@@ -1,7 +1,7 @@
 import { Navigate, Route,Routes } from "react-router"
 import HomePage from './pages/HomePage.jsx'
 import SignUpPage from "./pages/SignUpPage.jsx"
-import LogInPage from "./pages/LoginPage.jsx"
+import LoginPage from "./pages/LoginPage.jsx"
 import ChatPage from "./pages/ChatPage.jsx"
 import NotificationPage from "./pages/NotificationsPage.jsx"
 import OnBoardingPage from "./pages/OnBoardingPage.jsx"
@@ -41,7 +41,7 @@ function App() {
             path="/login"
             element={
               !isAuthenticated 
-              ? <LogInPage /> 
+              ? <LoginPage /> 
               : <Navigate to={isOnboarded ? "/" : "/onboarding"} />}
           />
           <Route 
